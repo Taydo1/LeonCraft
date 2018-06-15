@@ -12,6 +12,7 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-std=c++11" />
 					<Add option="-g" />
 					<Add directory="include" />
 				</Compiler>
@@ -50,13 +51,18 @@
 		</Linker>
 		<Unit filename="include/Bloc.h" />
 		<Unit filename="include/BlocMultiTexture.h" />
-		<Unit filename="include/Camera.h" />
+		<Unit filename="include/CameraVolante.h" />
 		<Unit filename="include/Constantes.h" />
+		<Unit filename="include/Input.h" />
+		<Unit filename="include/Perso.h" />
 		<Unit filename="include/Texture.h" />
+		<Unit filename="include/Variables.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Bloc.cpp" />
 		<Unit filename="src/BlocMultiTexture.cpp" />
-		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/CameraVolante.cpp" />
+		<Unit filename="src/Input.cpp" />
+		<Unit filename="src/Perso.cpp" />
 		<Unit filename="src/Texture.cpp" />
 		<Extensions>
 			<code_completion />

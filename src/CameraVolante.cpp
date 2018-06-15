@@ -1,6 +1,7 @@
 #include "CameraVolante.h"
 
 #include "Constantes.h"
+#include "Variables.h"
 
 double deg2rad(double deg){
     return deg*M_PI/180;
@@ -85,15 +86,17 @@ void CameraVolante::affiche(){
     glLoadIdentity();
     gluLookAt(x, y, z, xVise, yVise, zVise, 0, 1, 0);
 
-    glDepthFunc(GL_ALWAYS);
-    glLineWidth(2);
-    glBegin(GL_LINES);
-        glColor3ub(255,0,0); glVertex3d(xVise,yVise,zVise); glVertex3d(xVise+0.1,yVise,zVise);
-        glColor3ub(0,255,0); glVertex3d(xVise,yVise,zVise); glVertex3d(xVise,yVise+0.1,zVise);
-        glColor3ub(0,0,255); glVertex3d(xVise,yVise,zVise); glVertex3d(xVise,yVise,zVise+0.1);
-    glEnd();
-    glLineWidth(1);
-    glDepthFunc(GL_LESS);
+    if(debug){
+        glDepthFunc(GL_ALWAYS);
+        glLineWidth(2);
+        glBegin(GL_LINES);
+            glColor3ub(255,0,0); glVertex3d(xVise,yVise,zVise); glVertex3d(xVise+0.1,yVise,zVise);
+            glColor3ub(0,255,0); glVertex3d(xVise,yVise,zVise); glVertex3d(xVise,yVise+0.1,zVise);
+            glColor3ub(0,0,255); glVertex3d(xVise,yVise,zVise); glVertex3d(xVise,yVise,zVise+0.1);
+        glEnd();
+        glLineWidth(1);
+        glDepthFunc(GL_LESS);
+    }
 }
 
 void CameraVolante::gestionEvenements(Input& input){

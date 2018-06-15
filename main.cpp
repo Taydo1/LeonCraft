@@ -6,7 +6,8 @@
 #include "Input.h"
 
 
-bool pause=false;
+bool pause=false,
+     debug=false;
 
 
 SDL_Window* fenetre(0);
@@ -27,9 +28,6 @@ void dessineScene(){
     glMatrixMode(GL_MODELVIEW);
     bloc1.affiche();
     bloc2.affiche();
-
-    // Actualisation de la fenêtre
-    SDL_GL_SwapWindow(fenetre);
 }
 
 void jeu(){
@@ -54,16 +52,19 @@ void jeu(){
             if(pause){
                 SDL_WarpMouseInWindow(fenetre, LARGEUR_ECRAN/2, HAUTEUR_ECRAN/2);
             }
-
         }
+        if(input.key[SDL_SCANCODE_F3]){
+            debug=!debug;
+            input.key[SDL_SCANCODE_F3]=false;
+        }
+
         if(!pause){
             cam.gestionEvenements(input);
+
+            dessineScene();
+            cam.affiche();
+            SDL_GL_SwapWindow(fenetre);
         }
-
-
-        dessineScene();
-        cam.affiche();
-
 
         tempsImage=SDL_GetTicks()-debutImage;
         if(tempsImage<10){
