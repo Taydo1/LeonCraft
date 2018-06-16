@@ -4,21 +4,24 @@
 #include "Texture.h"
 #include "CameraVolante.h"
 #include "Input.h"
+#include "Perso.h"
 
 
 bool pause=false,
-     debug=false;
+     debug=true;
 
 
 SDL_Window* fenetre(0);
 SDL_GLContext contexteOpenGL(0);
 
+Perso joueur;
+
 Texture terre;
 Texture herbeDessus;
 Texture herbeCote;
 
-Bloc bloc1;
-BlocMultiTexture bloc2;
+vector<Bloc*> carte;
+
 
 
 void dessineScene(){
@@ -26,8 +29,18 @@ void dessineScene(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) ;
 
     glMatrixMode(GL_MODELVIEW);
-    bloc1.affiche();
-    bloc2.affiche();
+    for(unsigned int i=0;i<carte.size();i++){
+        carte[i]->affiche();
+    }
+
+    if(joueur.getBlocVise()!=NULL){
+        glDepthFunc(GL_ALWAYS);
+        glLineWidth(2);
+        joueur.getBlocVise()->surligneCote(joueur.getCoteVise());
+        glLineWidth(1);
+        glDepthFunc(GL_LESS);
+
+    }
 }
 
 void jeu(){
@@ -59,12 +72,14 @@ void jeu(){
         }
 
         if(!pause){
+            joueur.gestionEvenements(input);
             cam.gestionEvenements(input);
 
             dessineScene();
             cam.affiche();
             SDL_GL_SwapWindow(fenetre);
         }
+
 
         tempsImage=SDL_GetTicks()-debutImage;
         if(tempsImage<10){
@@ -75,8 +90,8 @@ void jeu(){
 
 }
 void initScene(){
-    bloc1 = Bloc(0,0,0,1,1,1, terre.getID());
-    bloc2 = BlocMultiTexture(3,0,0,1,1,1, herbeCote.getID(), herbeDessus.getID(), terre.getID());
+    carte.push_back(new Bloc(0,0,0,1,1,1, terre.getID()));
+    carte.push_back(new BlocMultiTexture(3,0,0,1,1,1, herbeCote.getID(), herbeDessus.getID(), terre.getID()));
 }
 
 void initTexture(){
@@ -102,6 +117,10 @@ int init(){
     // Double Buffer
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
+    SDL_GL_SetAttribute( SDL_GL_MULTISAMPLEBUFFERS, 1 );
+    SDL_GL_SetAttribute( SDL_GL_MULTISAMPLESAMPLES, 4 );
+
 
     // Création de la fenêtre
     fenetre = SDL_CreateWindow("Test SDL 2.0", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, LARGEUR_ECRAN, HAUTEUR_ECRAN, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
@@ -137,10 +156,15 @@ int init(){
     gluPerspective(70,(double)LARGEUR_ECRAN/HAUTEUR_ECRAN, 0.01, 1000);
 
     glClearColor(0.42,0.796,1,1);
+    glClearColor(1,1,1,1);
     return 0;
 }
 
-
+void quit(){
+    for(unsigned int i=0;i<carte.size();i++){
+        delete carte[i];
+    }
+}
 int main(int argc, char **argv)
 {
     init();
@@ -149,6 +173,7 @@ int main(int argc, char **argv)
 
     jeu();
 
+    quit();
     SDL_GL_DeleteContext(contexteOpenGL);
     SDL_DestroyWindow(fenetre);
     SDL_Quit();

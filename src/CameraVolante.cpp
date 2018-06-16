@@ -2,6 +2,9 @@
 
 #include "Constantes.h"
 #include "Variables.h"
+#include "Perso.h"
+
+extern Perso joueur;
 
 double deg2rad(double deg){
     return deg*M_PI/180;
@@ -129,5 +132,7 @@ void CameraVolante::calculVise(){
     xVise=x+vitesseHorizontale*cos(angleHorizontal);
     yVise=y+sin(angleVertical);
     zVise=z+vitesseHorizontale*sin(angleHorizontal);
+
+    joueur.pickingBloc();
 }
 
